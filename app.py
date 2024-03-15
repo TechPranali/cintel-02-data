@@ -25,10 +25,10 @@ with ui.sidebar(open="open"):
     )
 
     # Input for Plotly histogram bins count
-    ui.input_numeric("plotly_bin_count", "Plotly Bin Number", 40)
+    ui.input_numeric("plotly_bin_count", "Plotly Bin Count", 40)
 
     # Slider for Seaborn bins count
-    ui.input_slider("seaborn_bin_count", "seaborn bin Number", 1, 40, 20)
+    ui.input_slider("seaborn_bin_count", "Seaborn Bin Count", 1, 40, 20)
 
     # Checkbox group for selecting species
     ui.input_checkbox_group(
