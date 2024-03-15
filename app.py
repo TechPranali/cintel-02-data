@@ -1,29 +1,36 @@
-from shiny import render
-from shiny.express import input, ui
-from shinywidgets import render_plotly
-import pandas as pd
-import plotly.express as px
-import seaborn as sns
+from shiny import render  
+from shiny.express import input, ui  
+from shinywidgets import render_plotly  
+import pandas as pd  
+import plotly.express as px  
+import seaborn as sns  
 import palmerpenguins 
 
+# Load penguins data into DataFrame
 penguins_df = palmerpenguins.load_penguins()
+
+
 ui.page_opts(title="Pranali's Penguin Data", fillable=True)
 
+# Create sidebar UI elements
 with ui.sidebar(open="open"):
+    # Heading
     ui.h2("Sidebar")
+
+    # Dropdown to choose Plotly attribute
     ui.input_selectize(
         "selected_attribute",
         "Choose Plotly attribute",
         ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"],
     )
 
-    # Plotly histogram bins
+    # Input for Plotly histogram bins count
     ui.input_numeric("plotly_bin_count", "Plotly Bin Number", 40)
 
-    # Number of Seaborn bins
+    # Slider for Seaborn bins count
     ui.input_slider("seaborn_bin_count", "seaborn bin Number", 1, 40, 20)
 
-    # Species
+    # Checkbox group for selecting species
     ui.input_checkbox_group(
         "selected_species_list",
         "species",
@@ -32,41 +39,46 @@ with ui.sidebar(open="open"):
         inline=True,
     )
 
-    #horizontal rule to the sidebar
+    # Horizontal rule
     ui.hr()
 
-    # Use ui.a() to add a hyperlink to the sidebar
+    # Link to GitHub repo
     ui.a(
         "Pranali's GitHub Repo",
         href="https://github.com/TechPranali/cintel-02-data",
         target="_blank",
     )
 
-# create a layout to include 2 cards
+# Create layout with two cards
 with ui.layout_columns():
     with ui.card(full_screen=True):  
+        # Heading for Penguin Data Table
         ui.h2("Penguin Data Table")
 
+        # Render penguins DataFrame as DataTable
         @render.data_frame
         def penguins_datatable():
             return render.DataTable(penguins_df)
 
     with ui.card(full_screen=True): 
+        # Heading for Penguin Data Grid
         ui.h2("Penguin Data Grid")
 
+        # Render penguins DataFrame as DataGrid
         @render.data_frame
         def penguins_datagrid():
             return render.DataGrid(penguins_df)
 
-
-# added a horizontal rule
+# Horizontal rule
 ui.hr()
 
-# create a layout to include 3 cards with different plots
+# Create layout with three cards for different plots
 with ui.layout_columns():
     with ui.card(full_screen=True):
+        # Heading for Species Plotly Histogram
         ui.h2("Species Plotly Histogram")
 
+        # Render Plotly histogram
         @render_plotly
         def plotly_histogram():
             return px.histogram(
@@ -77,8 +89,10 @@ with ui.layout_columns():
             )
 
     with ui.card(full_screen=True):
+        # Heading for Seaborn Histogram
         ui.h2("Seaborn Histogram")
 
+        # Render Seaborn histogram
         @render.plot(alt="Species Seaborn Histogram")
         def seaborn_histogram():
             seaborn_plot = sns.histplot(
@@ -92,8 +106,10 @@ with ui.layout_columns():
             seaborn_plot.set_ylabel("Measurement")
 
     with ui.card(full_screen=True):
+        # Heading for Species Plotly Scatterplot
         ui.h2("Species Plotly Scatterplot")
 
+        # Render Plotly scatterplot
         @render_plotly
         def plotly_scatterplot():
             return px.scatter(
